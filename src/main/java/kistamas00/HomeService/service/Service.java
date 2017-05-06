@@ -1,4 +1,4 @@
-package homeservice.service;
+package kistamas00.HomeService.service;
 
 public class Service {
 

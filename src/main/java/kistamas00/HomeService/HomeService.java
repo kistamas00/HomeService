@@ -1,11 +1,11 @@
-package homeservice;
+package kistamas00.HomeService;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
 import com.sun.net.httpserver.HttpServer;
 
-import homeservice.handler.RequestHandler;
+import kistamas00.HomeService.handler.RequestHandler;
 
 public class HomeService {
 
