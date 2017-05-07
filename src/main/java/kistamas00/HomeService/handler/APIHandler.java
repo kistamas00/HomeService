@@ -7,14 +7,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
-public class RequestHandler implements HttpHandler {
+import kistamas00.HomeService.service.ServiceHolder;
+
+public class APIHandler implements HttpHandler {
 
 	public void handle(HttpExchange e) throws IOException {
 
 		ObjectMapper mapper = new ObjectMapper();
 
-		// FIXME
-		String response = mapper.writeValueAsString(null);
+		String response = mapper.writeValueAsString(
+				ServiceHolder.getServiceHolder().getServices());
 
 		e.sendResponseHeaders(200, response.length());
 
