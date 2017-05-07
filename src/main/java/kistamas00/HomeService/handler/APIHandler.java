@@ -16,7 +16,7 @@ public class APIHandler implements HttpHandler {
 		ObjectMapper mapper = new ObjectMapper();
 
 		String response = mapper.writeValueAsString(
-				ServiceHolder.getServiceHolder().getServices());
+				ServiceHolder.getInstance().getServices());
 
 		e.sendResponseHeaders(200, response.length());
 

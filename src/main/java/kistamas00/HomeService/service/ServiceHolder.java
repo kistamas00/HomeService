@@ -35,7 +35,7 @@ public class ServiceHolder {
 		return services;
 	}
 
-	public static final ServiceHolder getServiceHolder() {
+	public static final ServiceHolder getInstance() {
 
 		if (instance == null) {
 

@@ -15,7 +15,7 @@ public class HomeService {
 
 	public static void main(String[] args) throws IOException, JAXBException {
 
-		ServiceHolder.getServiceHolder();
+		ServiceHolder.getInstance();
 
 		HttpServer server = HttpServer.create(new InetSocketAddress(80), 0);
 		server.createContext("/", new BasicHandler());
