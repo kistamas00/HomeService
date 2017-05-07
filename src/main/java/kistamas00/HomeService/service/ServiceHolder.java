@@ -38,6 +38,14 @@ public class ServiceHolder {
 		return services;
 	}
 
+	public void startOrStopService(long id) {
+
+		Service service = services.stream().filter(s -> s.getID() == id)
+				.findFirst().get();
+
+		service.setRunning(!service.isRunning());
+	}
+
 	private void updateStatuses() {
 		// TODO
 	}
