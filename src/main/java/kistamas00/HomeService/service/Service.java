@@ -1,8 +1,6 @@
 package kistamas00.HomeService.service;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -28,31 +26,26 @@ public class Service {
 	@XmlAttribute
 	private String stopCommand;
 
-	private String executeCommand(String command) {
-
-		StringBuffer output = new StringBuffer();
+	private int executeCommand(String command) {
 
 		try {
 
-			Process p = Runtime.getRuntime().exec(command);
+			Process p = Runtime.getRuntime().exec("cmd /c " + command);
 			p.waitFor();
 
-			BufferedReader reader = new BufferedReader(
-					new InputStreamReader(p.getInputStream()));
-
-			String line = "";
-			while ((line = reader.readLine()) != null) {
-				output.append(line + "\n");
-			}
+			return p.exitValue();
 
 		} catch (IOException e) {
+
 			System.err.println(
 					"Command not found! (#" + this.ID + " - " + command + ")");
+
 		} catch (InterruptedException e) {
+
 			e.printStackTrace();
 		}
 
-		return output.toString();
+		return -1;
 	}
 
 	public void start() {
@@ -75,8 +68,11 @@ public class Service {
 		if (statusCommand != null && !statusCommand.isEmpty()) {
 			System.out.println("Execute status command! (#" + this.ID + " - "
 					+ statusCommand + ")");
-			executeCommand(statusCommand);
-			// TODO set running variable
+
+			int exitValue = executeCommand(statusCommand);
+			System.out.println("Exit value: " + exitValue);
+
+			this.running = exitValue == 0;
 		}
 	}
 
