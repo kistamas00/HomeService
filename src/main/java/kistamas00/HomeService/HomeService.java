@@ -19,7 +19,7 @@ public class HomeService {
 
 		HttpServer server = HttpServer.create(new InetSocketAddress(80), 0);
 		server.createContext("/", new BasicHandler());
-		server.createContext("/api", new APIHandler());
+		server.createContext(APIHandler.URI, new APIHandler());
 		server.start();
 
 		System.out.println("HomeService server is running!");

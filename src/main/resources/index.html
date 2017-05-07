@@ -2,6 +2,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>HomeService</title>
 
 		<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
@@ -14,7 +15,7 @@
 			<table class="table table-hover">
 				<thead>
 					<tr class="row">
-						<th>Name</th>
+						<th>Service name</th>
 						<th></th>
 					</tr>
 				</thead>
@@ -26,24 +27,74 @@
 </html>
 
 <script type="text/javascript">
-	$( document ).ready( function() {
 
+	function createRow(service, target) {
+		
+		var iconClass = 'glyphicon glyphicon-play-circle';
+		var onclick = 'onclick="change('+service.id+', false)"';
+
+		if (service.statusCommand !== undefined && service.statusCommand !== null && service.statusCommand.length > 0) {
+			iconClass = service.running ? 'glyphicon glyphicon-ok-circle' : 'glyphicon glyphicon-remove-circle';
+			onclick = 'onclick="change('+service.id+', true)"';
+		}
+
+		target.append('<td class="col-sm-10" style="vertical-align: middle;">'+service.name+'</td><td class="col-sm-2 text-center" '+onclick+'><h3 class="'+iconClass+'" style="margin-top: 10px;"></h3></td>');
+	}
+
+	function update(id) {
+
+		if (id === undefined) {
+
+			$.ajax({
+				url: '/api',
+				type: 'GET',
+				success: function(data) {
+					
+					$('#target-tbody').empty();
+
+					for (var i in data) {
+						var service = data[i];
+
+						var $tr = $('<tr id="service-'+service.id+'" class="row" />');
+						
+						createRow(service, $tr);
+
+						$('#target-tbody').append($tr);
+					}
+				}
+			});
+
+		} else {
+
+			$.ajax({
+				url: '/api/'+id,
+				type: 'GET',
+				success: function(service) {
+					
+					$('#service-'+id).empty();
+
+					createRow(service, $('#service-'+id));
+				}
+			});
+		}
+	}
+	
+	function change(id, refresh) {
+		
 		$.ajax({
-			url: '/api',
-			type: 'GET',
-			success: function(data) {
-				
-				for (var i in data) {
-					var service = data[i];
-
-					var iconClass = service.running ? 'glyphicon glyphicon-ok' : 'glyphicon glyphicon-remove';
-
-					var $tr = $('<tr class="row" />');
-					$tr.append('<td class="col-sm-10">'+service.name+'</td><td class="col-sm-2"><span class="'+iconClass+'"></span></td>');
-
-					$('#target-tbody').append($tr);
+			url: '/api/'+id,
+			type: 'POST',
+			success: function() {
+				if (refresh) {
+					update(id);
 				}
 			}
 		});
+	}
+
+
+	$( document ).ready( function() {
+		update();
+		setInterval(update, 3000);
 	});
 </script>
