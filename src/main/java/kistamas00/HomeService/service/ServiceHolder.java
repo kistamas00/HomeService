@@ -20,7 +20,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ServiceHolder {
 
-	private static final String XMLPath = "services.xml";
+	private static final String XMLName = "services.xml";
 	private static ServiceHolder instance;
 	private static long nextServiceID;
 
@@ -54,10 +54,12 @@ public class ServiceHolder {
 			JAXBContext jaxbContext = JAXBContext
 					.newInstance(ServiceHolder.class);
 
-			File file = new File(XMLPath);
+			File file = new File(ClassLoader.getSystemClassLoader()
+					.getResource(XMLName).getFile());
+
 			if (!file.exists()) {
 
-				System.err.println(XMLPath + " not found! Reset settings!");
+				System.err.println(XMLName + " not found! Reset settings!");
 
 				serviceHolder = new ServiceHolder();
 				serviceHolder.services = new ArrayList<Service>();
@@ -70,7 +72,7 @@ public class ServiceHolder {
 
 			} else {
 
-				System.out.println(XMLPath + " loaded!");
+				System.out.println(XMLName + " loaded!");
 
 				Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 				serviceHolder = (ServiceHolder) unmarshaller.unmarshal(file);
