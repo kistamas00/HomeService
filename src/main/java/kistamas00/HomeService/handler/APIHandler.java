@@ -13,17 +13,28 @@ public class APIHandler implements HttpHandler {
 
 	public void handle(HttpExchange e) throws IOException {
 
-		ObjectMapper mapper = new ObjectMapper();
+		String requestMethod = e.getRequestMethod();
 
-		String response = mapper
-				.writeValueAsString(ServiceHolder.getInstance().getServices());
+		if (requestMethod.equals("GET")) {
 
-		e.getResponseHeaders().add("Content-type", "application/json");
-		e.sendResponseHeaders(200, response.length());
+			ObjectMapper mapper = new ObjectMapper();
 
-		OutputStream os = e.getResponseBody();
+			String response = mapper.writeValueAsString(
+					ServiceHolder.getInstance().getServices());
 
-		os.write(response.getBytes());
-		os.close();
+			e.getResponseHeaders().add("Content-type", "application/json");
+			e.sendResponseHeaders(200, response.length());
+
+			OutputStream os = e.getResponseBody();
+
+			os.write(response.getBytes());
+			os.close();
+
+		} else {
+
+			e.getResponseHeaders().add("Content-type", "text/html");
+			e.sendResponseHeaders(405, 0);
+			e.getRequestBody().close();
+		}
 	}
 }
