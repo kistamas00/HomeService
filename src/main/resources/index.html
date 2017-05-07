@@ -27,6 +27,13 @@
 
 <script type="text/javascript">
 
+	function createRow(service, target) {
+		
+		var iconClass = service.running ? 'glyphicon glyphicon-ok' : 'glyphicon glyphicon-remove';
+
+		target.append('<td class="col-sm-10">'+service.name+'</td><td class="col-sm-2 text-center" onclick="change('+service.id+')"><span class="'+iconClass+'"></span></td>');
+	}
+
 	function update(id) {
 
 		if (id === undefined) {
@@ -41,10 +48,9 @@
 					for (var i in data) {
 						var service = data[i];
 
-						var iconClass = service.running ? 'glyphicon glyphicon-ok' : 'glyphicon glyphicon-remove';
-
 						var $tr = $('<tr id="service-'+service.id+'" class="row" />');
-						$tr.append('<td class="col-sm-10">'+service.name+'</td><td class="col-sm-2" onclick="change('+service.id+')"><span class="'+iconClass+'"></span></td>');
+						
+						createRow(service, $tr);
 
 						$('#target-tbody').append($tr);
 					}
@@ -60,9 +66,7 @@
 					
 					$('#service-'+id).empty();
 
-					var iconClass = service.running ? 'glyphicon glyphicon-ok' : 'glyphicon glyphicon-remove';
-
-					$('#service-'+id).append('<td class="col-sm-10">'+service.name+'</td><td class="col-sm-2" onclick="change('+service.id+')"><span class="'+iconClass+'"></span></td>');
+					createRow(service, $('#service-'+id));
 				}
 			});
 		}
@@ -74,7 +78,6 @@
 			url: '/api/'+id,
 			type: 'POST',
 			success: function() {
-				
 				update(id);
 			}
 		});
