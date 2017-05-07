@@ -15,9 +15,10 @@ public class APIHandler implements HttpHandler {
 
 		ObjectMapper mapper = new ObjectMapper();
 
-		String response = mapper.writeValueAsString(
-				ServiceHolder.getInstance().getServices());
+		String response = mapper
+				.writeValueAsString(ServiceHolder.getInstance().getServices());
 
+		e.getResponseHeaders().add("Content-type", "application/json");
 		e.sendResponseHeaders(200, response.length());
 
 		OutputStream os = e.getResponseBody();

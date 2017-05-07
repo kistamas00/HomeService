@@ -32,7 +32,14 @@ public class ServiceHolder {
 	}
 
 	public List<Service> getServices() {
+
+		updateStatuses();
+
 		return services;
+	}
+
+	private void updateStatuses() {
+		// TODO
 	}
 
 	public static final ServiceHolder getInstance() {

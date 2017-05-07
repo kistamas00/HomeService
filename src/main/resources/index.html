@@ -2,10 +2,48 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title>Title of the document</title>
+		<title>HomeService</title>
+
+		<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 	</head>
 
 	<body>
-		Content of the document......
+		<div class="container">
+			<table class="table table-hover">
+				<thead>
+					<tr class="row">
+						<th>Name</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody id="target-tbody">
+				</tbody>
+			</table>
+		</div>
 	</body>
 </html>
+
+<script type="text/javascript">
+	$( document ).ready( function() {
+
+		$.ajax({
+			url: '/api',
+			type: 'GET',
+			success: function(data) {
+				
+				for (var i in data) {
+					var service = data[i];
+
+					var iconClass = service.running ? 'glyphicon glyphicon-ok' : 'glyphicon glyphicon-remove';
+
+					var $tr = $('<tr class="row" />');
+					$tr.append('<td class="col-sm-10">'+service.name+'</td><td class="col-sm-2"><span class="'+iconClass+'"></span></td>');
+
+					$('#target-tbody').append($tr);
+				}
+			}
+		});
+	});
+</script>
