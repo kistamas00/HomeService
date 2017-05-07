@@ -30,7 +30,7 @@ public class Service {
 
 		try {
 
-			Process p = Runtime.getRuntime().exec("cmd /c " + command);
+			Process p = Runtime.getRuntime().exec(command);
 			p.waitFor();
 
 			return p.exitValue();
