@@ -2,6 +2,8 @@ package kistamas00.HomeService.service;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
@@ -20,6 +22,7 @@ public class ServiceHolder {
 
 	private static final String XMLPath = "services.xml";
 	private static ServiceHolder instance;
+	private static long nextServiceID;
 
 	@XmlElementWrapper(name = "Services")
 	@XmlElement(name = "Service")
@@ -63,12 +66,22 @@ public class ServiceHolder {
 				marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 				marshaller.marshal(serviceHolder, file);
 
+				nextServiceID = 0;
+
 			} else {
 
 				System.out.println(XMLPath + " loaded!");
 
 				Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 				serviceHolder = (ServiceHolder) unmarshaller.unmarshal(file);
+
+				nextServiceID = Collections
+						.max(serviceHolder.services,
+								Comparator.comparing(s -> s.getID()))
+						.getID() + 1;
+
+				serviceHolder.services.forEach(s -> s
+						.setID(s.getID() < 0 ? nextServiceID++ : s.getID()));
 			}
 
 		} catch (JAXBException e) {

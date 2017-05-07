@@ -13,21 +13,24 @@ public class Service {
 	private long ID;
 
 	@XmlAttribute
+	private String name;
+
+	@XmlAttribute
 	private String startCommand;
 
 	@XmlAttribute
 	private String stopCommand;
-
-	public Service() {
-		this.running = false;
-	}
 
 	public long getID() {
 		return ID;
 	}
 
 	public boolean isRunning() {
-		return running;
+		return running != null ? running : false;
+	}
+
+	public String getName() {
+		return name;
 	}
 
 	public String getStartCommand() {
@@ -38,8 +41,16 @@ public class Service {
 		return stopCommand;
 	}
 
+	public void setID(long iD) {
+		ID = iD;
+	}
+
 	public void setRunning(boolean running) {
 		this.running = running;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public void setStartCommand(String startCommand) {
