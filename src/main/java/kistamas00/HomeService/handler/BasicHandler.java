@@ -1,9 +1,9 @@
 package kistamas00.HomeService.handler;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.file.Files;
+
+import org.apache.commons.io.IOUtils;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -18,9 +18,9 @@ public class BasicHandler implements HttpHandler {
 
 		OutputStream responseBody = e.getResponseBody();
 
-		byte[] encoded = Files
-				.readAllBytes(new File(ClassLoader.getSystemClassLoader()
-						.getResource(HTMLName).getFile()).toPath());
+		byte[] encoded = IOUtils.toByteArray(ClassLoader.getSystemClassLoader()
+				.getResourceAsStream(HTMLName));
+
 		e.sendResponseHeaders(200, encoded.length);
 
 		responseBody.write(encoded);
