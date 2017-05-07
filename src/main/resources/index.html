@@ -2,6 +2,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>HomeService</title>
 
 		<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
@@ -29,9 +30,15 @@
 
 	function createRow(service, target) {
 		
-		var iconClass = service.running ? 'glyphicon glyphicon-ok' : 'glyphicon glyphicon-remove';
+		var iconClass = 'glyphicon glyphicon-play-circle';
+		var onclick = 'onclick="change('+service.id+', false)"';
 
-		target.append('<td class="col-sm-10">'+service.name+'</td><td class="col-sm-2 text-center" onclick="change('+service.id+')"><span class="'+iconClass+'"></span></td>');
+		if (service.statusCommand !== undefined && service.statusCommand !== null && service.statusCommand.length > 0) {
+			iconClass = service.running ? 'glyphicon glyphicon-ok-circle' : 'glyphicon glyphicon-remove-circle';
+			onclick = 'onclick="change('+service.id+', true)"';
+		}
+
+		target.append('<td class="col-sm-10" style="vertical-align: middle;">'+service.name+'</td><td class="col-sm-2 text-center" '+onclick+'><h3 class="'+iconClass+'" style="margin-top: 10px;"></h3></td>');
 	}
 
 	function update(id) {
@@ -72,13 +79,15 @@
 		}
 	}
 	
-	function change(id) {
+	function change(id, refresh) {
 		
 		$.ajax({
 			url: '/api/'+id,
 			type: 'POST',
 			success: function() {
-				update(id);
+				if (refresh) {
+					update(id);
+				}
 			}
 		});
 	}

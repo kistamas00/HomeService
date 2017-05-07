@@ -48,10 +48,8 @@ public class APIHandler implements HttpHandler {
 						ServiceHolder.getInstance().getServices());
 			} else {
 
-				long localID = ID;
-				response = mapper.writeValueAsString(ServiceHolder.getInstance()
-						.getServices().stream()
-						.filter(s -> s.getID() == localID).findFirst().get());
+				response = mapper.writeValueAsString(
+						ServiceHolder.getInstance().getService(ID));
 			}
 
 			e.getResponseHeaders().add("Content-type", "application/json");

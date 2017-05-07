@@ -38,16 +38,38 @@ public class ServiceHolder {
 		return services;
 	}
 
+	public Service getService(long id) {
+
+		Service service = services.stream().filter(s -> s.getID() == id)
+				.findFirst().get();
+
+		service.updateStatus();
+
+		return service;
+	}
+
 	public void startOrStopService(long id) {
 
 		Service service = services.stream().filter(s -> s.getID() == id)
 				.findFirst().get();
 
-		service.setRunning(!service.isRunning());
+		if (service.getStatusCommand() == null
+				|| service.getStatusCommand().isEmpty()) {
+
+			service.start();
+
+		} else {
+
+			if (service.isRunning()) {
+				service.stop();
+			} else {
+				service.start();
+			}
+		}
 	}
 
 	private void updateStatuses() {
-		// TODO
+		services.forEach(s -> s.updateStatus());
 	}
 
 	public static final ServiceHolder getInstance() {
