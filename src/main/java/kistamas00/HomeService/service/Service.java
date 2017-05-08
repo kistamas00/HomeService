@@ -1,6 +1,8 @@
 package kistamas00.HomeService.service;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -26,14 +28,40 @@ public class Service {
 	@XmlAttribute
 	private String stopCommand;
 
-	private int executeCommand(String command) {
+	private boolean executeCommand(String command) {
 
 		try {
 
 			Process p = Runtime.getRuntime().exec(command);
 			p.waitFor();
 
-			return p.exitValue();
+			int exitValue = p.exitValue();
+
+			if (exitValue == 0) {
+				return true;
+			}
+
+			StringBuffer output = new StringBuffer();
+			BufferedReader reader = new BufferedReader(
+					new InputStreamReader(p.getInputStream()));
+
+			String line = "";
+			while ((line = reader.readLine()) != null) {
+
+				line = line.trim();
+
+				if (output.toString().isEmpty()) {
+					output.append(line);
+				} else {
+					output.append("\n" + line);
+				}
+			}
+
+			String result = output.toString();
+
+			if (result.equals("1") || result.equals("\"ON\"")) {
+				return true;
+			}
 
 		} catch (IOException e) {
 
@@ -45,7 +73,7 @@ public class Service {
 			e.printStackTrace();
 		}
 
-		return -1;
+		return false;
 	}
 
 	public void start() {
@@ -69,10 +97,10 @@ public class Service {
 			System.out.println("Execute status command! (#" + this.ID + " - "
 					+ statusCommand + ")");
 
-			int exitValue = executeCommand(statusCommand);
-			System.out.println("Exit value: " + exitValue);
+			boolean status = executeCommand(statusCommand);
+			System.out.println("Status: " + (status ? "ON" : "OFF"));
 
-			this.running = exitValue == 0;
+			this.running = status;
 		}
 	}
 
