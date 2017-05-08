@@ -1,8 +1,6 @@
 package kistamas00.HomeService.service;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -32,34 +30,25 @@ public class Service {
 
 		try {
 
-			Process p = Runtime.getRuntime().exec(command);
+			String osName = System.getProperty("os.name");
+			String[] commandArray = new String[3];
+
+			if (osName.contains("Windows")) {
+				commandArray[0] = "cmd";
+				commandArray[1] = "/c";
+			} else if (osName.contains("Linux")) {
+				commandArray[0] = "bash";
+				commandArray[1] = "-c";
+			}
+
+			commandArray[2] = command;
+
+			Process p = Runtime.getRuntime().exec(commandArray);
 			p.waitFor();
 
 			int exitValue = p.exitValue();
 
 			if (exitValue == 0) {
-				return true;
-			}
-
-			StringBuffer output = new StringBuffer();
-			BufferedReader reader = new BufferedReader(
-					new InputStreamReader(p.getInputStream()));
-
-			String line = "";
-			while ((line = reader.readLine()) != null) {
-
-				line = line.trim();
-
-				if (output.toString().isEmpty()) {
-					output.append(line);
-				} else {
-					output.append("\n" + line);
-				}
-			}
-
-			String result = output.toString();
-
-			if (result.equals("1") || result.equals("\"ON\"")) {
 				return true;
 			}
 
