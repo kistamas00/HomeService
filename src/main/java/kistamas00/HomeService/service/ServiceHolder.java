@@ -20,6 +20,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ServiceHolder {
 
+	private static final String propertiesPrefix = "/properties";
 	private static final String XMLName = "services.xml";
 	private static ServiceHolder instance;
 	private static long nextServiceID;
@@ -91,8 +92,8 @@ public class ServiceHolder {
 			JAXBContext jaxbContext = JAXBContext
 					.newInstance(ServiceHolder.class);
 
-			File file = new File(ClassLoader.getSystemClassLoader()
-					.getResource(XMLName).getFile());
+			File file = new File(System.getProperty("user.dir")
+					+ propertiesPrefix + File.separator + XMLName);
 
 			if (!file.exists()) {
 

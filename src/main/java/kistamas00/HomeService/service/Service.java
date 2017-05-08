@@ -26,14 +26,31 @@ public class Service {
 	@XmlAttribute
 	private String stopCommand;
 
-	private int executeCommand(String command) {
+	private boolean executeCommand(String command) {
 
 		try {
 
-			Process p = Runtime.getRuntime().exec(command);
+			String osName = System.getProperty("os.name");
+			String[] commandArray = new String[3];
+
+			if (osName.contains("Windows")) {
+				commandArray[0] = "cmd";
+				commandArray[1] = "/c";
+			} else if (osName.contains("Linux")) {
+				commandArray[0] = "bash";
+				commandArray[1] = "-c";
+			}
+
+			commandArray[2] = command;
+
+			Process p = Runtime.getRuntime().exec(commandArray);
 			p.waitFor();
 
-			return p.exitValue();
+			int exitValue = p.exitValue();
+
+			if (exitValue == 0) {
+				return true;
+			}
 
 		} catch (IOException e) {
 
@@ -45,7 +62,7 @@ public class Service {
 			e.printStackTrace();
 		}
 
-		return -1;
+		return false;
 	}
 
 	public void start() {
@@ -69,10 +86,10 @@ public class Service {
 			System.out.println("Execute status command! (#" + this.ID + " - "
 					+ statusCommand + ")");
 
-			int exitValue = executeCommand(statusCommand);
-			System.out.println("Exit value: " + exitValue);
+			boolean status = executeCommand(statusCommand);
+			System.out.println("Status: " + (status ? "ON" : "OFF"));
 
-			this.running = exitValue == 0;
+			this.running = status;
 		}
 	}
 
