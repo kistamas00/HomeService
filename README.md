@@ -1,2 +1,2 @@
 # HomeService
-Java based home monitoring web application.
+Java based home service monitoring web application.
